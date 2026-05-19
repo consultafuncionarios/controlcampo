@@ -31,7 +31,7 @@
         .card-info strong { color: #555; font-size: 0.85rem; display: block; text-transform: uppercase; }
         .status-badge { display: block; text-align: center; padding: 8px; margin-top: 10px; border-radius: 6px; font-weight: bold; font-size: 1.1rem; text-transform: uppercase; }
         
-        /* Estados de color para Activo / Inactivo */
+        /* Nuevos estados de color para Activo / Inactivo */
         .status-activo { background-color: #c8e6c9; color: #256029; }
         .status-inactivo { background-color: #ffcdd2; color: #c62828; }
         
@@ -50,8 +50,10 @@
     </div>
     <button onclick="consultarCedula()">Consultar</button>
 
+    <!-- Mensaje de Error -->
     <div id="errorBox" class="error-msg">Funcionario no encontrado o documentación pendiente.</div>
 
+    <!-- Carné Digital -->
     <div id="badgeCard" class="card">
         <div class="card-header">FUNCIONARIO AUTORIZADO</div>
         <div class="card-body">
@@ -64,63 +66,27 @@
     </div>
 
     <div class="footer">
-        V1.2 - Control de Ingreso a Campo
+        V1.1 - Control de Ingreso a Campo
     </div>
 </div>
 
 <script>
-    // NUEVA BASE DE DATOS ACTUALIZADA DESDE EL EXCEL
+    // BASE DE DATOS ACTUALIZADA (Estado modificado a activo/inactivo)
     const database = [
-     { "A": "ACUÑA BARBOZA NESTOR Y OLIVERA PEREIRA CLEBER", "B": "50852714", "C": "Lopez", "G": "46146", "H": "ACTIVO" },
-     { "A": "ACUÑA BARBOZA NESTOR Y OLIVERA PEREIRA CLEBER", "B": "49070513", "C": "Antunez", "G": "46155", "H": "ACTIVO" },
-     { "A": "ACUÑA BARBOZA NESTOR Y OLIVERA PEREIRA CLEBER", "B": "47309108", "C": "HERNANDEZ", "G": "46121", "H": "ACTIVO" },
-     { "A": "ACUÑA BARBOZA NESTOR Y OLIVERA PEREIRA CLEBER", "B": "54230358", "C": "GONZALEZ", "G": "46120", "H": "ACTIVO" },
-     { "A": "ACUÑA BARBOZA NESTOR Y OLIVERA PEREIRA CLEBER", "B": "55140394", "C": "ANTUNEZ", "G": "46049", "H": "ACTIVO" },
-     { "A": "ACUÑA BARBOZA NESTOR Y OLIVERA PEREIRA CLEBER", "B": "47504908", "C": "Rodriguez", "G": "45915", "H": "ACTIVO" },
-     { "A": "ACUÑA BARBOZA NESTOR Y OLIVERA PEREIRA CLEBER", "B": "53169140", "C": "Techera", "G": "45910", "H": "ACTIVO" },
-     { "A": "ACUÑA BARBOZA NESTOR Y OLIVERA PEREIRA CLEBER", "B": "54179542", "C": "RODRIGUEZ", "G": "45882", "H": "ACTIVO" },
-     { "A": "ACUÑA BARBOZA NESTOR Y OLIVERA PEREIRA CLEBER", "B": "45166807", "C": "Rey", "G": "45726", "H": "ACTIVO" },
-     { "A": "ACUÑA BARBOZA NESTOR Y OLIVERA PEREIRA CLEBER", "B": "26085987", "C": "Gomez", "G": "45450", "H": "ACTIVO" },
-     { "A": "ACUÑA BARBOZA NESTOR Y OLIVERA PEREIRA CLEBER", "B": "48357639", "C": "Techeira", "G": "44992", "H": "ACTIVO" },
-     { "A": "ACUÑA BARBOZA NESTOR Y OLIVERA PEREIRA CLEBER", "B": "50952227", "C": "Soza", "G": "45261", "H": "ACTIVO" },
-     { "A": "ACUÑA BARBOZA NESTOR Y OLIVERA PEREIRA CLEBER", "B": "49307431", "C": "Viera", "G": "45212", "H": "ACTIVO" },
-     { "A": "ACUÑA BARBOZA NESTOR Y OLIVERA PEREIRA CLEBER", "B": "54185947", "C": "Olivera", "G": "44763", "H": "ACTIVO" },
-     { "A": "ACUÑA BARBOZA NESTOR Y OLIVERA PEREIRA CLEBER", "B": "47699189", "C": "Rodriguez", "G": "45404", "H": "ACTIVO" },
-     { "A": "ACUÑA BARBOZA NESTOR Y OLIVERA PEREIRA CLEBER", "B": "52398198", "C": "Leites", "G": "45336", "H": "ACTIVO" },
-     { "A": "ACUÑA BARBOZA NESTOR Y OLIVERA PEREIRA CLEBER", "B": "52413958", "C": "de los Santos", "G": "45226", "H": "ACTIVO" },
-     { "A": "ACUÑA BARBOZA NESTOR Y OLIVERA PEREIRA CLEBER", "B": "53582083", "C": "HERNANDEZ", "G": "45070", "H": "ACTIVO" },
-     { "A": "ACUÑA BARBOZA NESTOR Y OLIVERA PEREIRA CLEBER", "B": "43501162", "C": "VASQUEZ", "G": "44844", "H": "ACTIVO" },
-     { "A": "ACUÑA BARBOZA NESTOR Y OLIVERA PEREIRA CLEBER", "B": "52407462", "C": "Vallejo", "G": "41962", "H": "ACTIVO" },
-     { "A": "ACUÑA BARBOZA NESTOR Y OLIVERA PEREIRA CLEBER", "B": "51945960", "C": "MARTINEZ", "G": "44354", "H": "ACTIVO" },
-     { "A": "ACUÑA BARBOZA NESTOR Y OLIVERA PEREIRA CLEBER", "B": "45506835", "C": "Mendez", "G": "44678", "H": "ACTIVO" },
-     { "A": "ACUÑA BARBOZA NESTOR Y OLIVERA PEREIRA CLEBER", "B": "44468082", "C": "Barboza", "G": "43193", "H": "ACTIVO" },
-     { "A": "ACUÑA BARBOZA NESTOR Y OLIVERA PEREIRA CLEBER", "B": "41993599", "C": "MACIEL", "G": "43609", "H": "ACTIVO" },
-     { "A": "ACUÑA BARBOZA NESTOR Y OLIVERA PEREIRA CLEBER", "B": "47317125", "C": "Gomez", "G": "44357", "H": "ACTIVO" },
-     { "A": "ACUÑA BARBOZA NESTOR Y OLIVERA PEREIRA CLEBER", "B": "50151578", "C": "Suarez", "G": "42807", "H": "ACTIVO" },
-     { "A": "ACUÑA BARBOZA NESTOR Y OLIVERA PEREIRA CLEBER", "B": "42880333", "C": "Martins", "G": "42535", "H": "ACTIVO" },
-     { "A": "ACUÑA BARBOZA NESTOR Y OLIVERA PEREIRA CLEBER", "B": "50881571", "C": "Acosta", "G": "42527", "H": "ACTIVO" },
-     { "A": "ACUÑA BARBOZA NESTOR Y OLIVERA PEREIRA CLEBER", "B": "34063309", "C": "De leon", "G": "41859", "H": "ACTIVO" },
-     { "A": "ACUÑA BARBOZA NESTOR Y OLIVERA PEREIRA CLEBER", "B": "40383151", "C": "Ortellano", "G": "42299", "H": "ACTIVO" },
-     { "A": "ACUÑA BARBOZA NESTOR Y OLIVERA PEREIRA CLEBER", "B": "44980042", "C": "Araujo", "G": "42205", "H": "ACTIVO" },
-     { "A": "ACUÑA BARBOZA NESTOR Y OLIVERA PEREIRA CLEBER", "B": "44484850", "C": "Antunez", "G": "41759", "H": "ACTIVO" },
-     { "A": "ACUÑA BARBOZA NESTOR Y OLIVERA PEREIRA CLEBER", "B": "44795223", "C": "MARTINEZ", "G": "41705", "H": "ACTIVO" },
-     { "A": "ACUÑA BARBOZA NESTOR Y OLIVERA PEREIRA CLEBER", "B": "45813309", "C": "Alvez", "G": "41590", "H": "ACTIVO" },
-     { "A": "ACUÑA BARBOZA NESTOR Y OLIVERA PEREIRA CLEBER", "B": "48118938", "C": "Rodriguez", "G": "41503", "H": "ACTIVO" },
-     { "A": "ACUÑA BARBOZA NESTOR Y OLIVERA PEREIRA CLEBER", "B": "44702553", "C": "Paines", "G": "41550", "H": "ACTIVO" },
-     { "A": "ACUÑA BARBOZA NESTOR Y OLIVERA PEREIRA CLEBER", "B": "32189757", "C": "Olivera", "G": "41500", "H": "ACTIVO" },
-     { "A": "AGRO SERVICIOS EL CHACAL SAS", "B": "54941713", "C": "Gonzalez", "G": "45314", "H": "ACTIVO" },
-     { "A": "AGRO SERVICIOS EL CHACAL SAS", "B": "51921639", "C": "Silva", "G": "45139", "H": "ACTIVO" },
-     { "A": "AGRO SERVICIOS EL CHACAL SAS", "B": "43760013", "C": "Baldivia", "G": "45145", "H": "ACTIVO" },
-     { "A": "Alfonso Noel Rucks Labaca", "B": "29893997", "C": "Bercianos", "G": "43409", "H": "ACTIVO" },
-     { "A": "Alfonso Noel Rucks Labaca", "B": "49993412", "C": "Silva", "G": "42284", "H": "ACTIVO" },
-     { "A": "ALVARO RAMOS Y FABIO OLIVERA", "B": "47712907", "C": "FUENTES", "G": "45965", "H": "ACTIVO" },
-     { "A": "ALVARO RAMOS Y FABIO OLIVERA", "B": "52200824", "C": "Martins", "G": "45938", "H": "ACTIVO" },
-     { "A": "ALVARO RAMOS Y FABIO OLIVERA", "B": "48336219", "C": "Olivera", "G": "45660", "H": "ACTIVO" }, { "A": "ALVARO RAMOS Y FABIO OLIVERA", "B": "48938190", "C": "TORRES", "G": "45586", "H": "ACTIVO" }, { "A": "ALVARO RAMOS Y FABIO OLIVERA", "B": "44243957", "C": "dos Santos", "G": "45561", "H": "ACTIVO" }, { "A": "ALVARO RAMOS Y FABIO OLIVERA", "B": "39828370", "C": "Rocha", "G": "45421", "H": "ACTIVO" }, { "A": "ALVARO RAMOS Y FABIO OLIVERA", "B": "36477530", "C": "Lotito", "G": "45421", "H": "ACTIVO" }, { "A": "ALVARO RAMOS Y FABIO OLIVERA", "B": "56479556", "C": "Martinez", "G": "45119", "H": "ACTIVO" },
-     { "A": "ASDELY S.A.", "B": "43321631", "C": "GULARTE", "G": "46051", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "44198938", "C": "Silva", "G": "46048", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "42805856", "C": "Benitez", "G": "46038", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "42002024", "C": "Pintos", "G": "46038", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "31820546", "C": "FREITAS", "G": "46034", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "40021773", "C": "CENTURION", "G": "46034", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "46011033", "C": "Reyes", "G": "46034", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "38869444", "C": "Rodriguez", "G": "46034", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "51167883", "C": "Araujo", "G": "46034", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "53686439", "C": "Ferreira", "G": "46036", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "32641816", "C": "Perez", "G": "46041", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "44753411", "C": "GUTIERREZ", "G": "46034", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "45608023", "C": "Correa", "G": "46028", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "48656108", "C": "Pintos", "G": "46020", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "52875231", "C": "ROBLEDO", "G": "46020", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "52150043", "C": "Villar", "G": "46024", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "25638349", "C": "CARNEIRO", "G": "46010", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "38091207", "C": "Vila", "G": "46010", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "44716392", "C": "Perez", "G": "46010", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "26685854", "C": "Cuadro", "G": "46013", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "49937517", "C": "Ibarrondo", "G": "46010", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "41701528", "C": "Silva", "G": "46009", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "32662606", "C": "Sena", "G": "45978", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "49446958", "C": "González", "G": "45973", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "43108156", "C": "Furtado", "G": "45968", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "25638349", "C": "Carneiro", "G": "45765", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "41457929", "C": "Silveira", "G": "45595", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "42198629", "C": "Gomez", "G": "45712", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "45831335", "C": "GONZALEZ", "G": "45733", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "47248057", "C": "Vallez", "G": "45726", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "53206948", "C": "Torena", "G": "45707", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "47233270", "C": "Martinez", "G": "45707", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "44104537", "C": "Leites", "G": "45658", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "49946986", "C": "Leites", "G": "45658", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "43321631", "C": "GULARTE", "G": "45677", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "35940526", "C": "FERREIRA", "G": "45642", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "33102693", "C": "Castro", "G": "45372", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "37625225", "C": "Silvera", "G": "45611", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "33249457", "C": "Lopez", "G": "45387", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "50656841", "C": "Lemos", "G": "45568", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "53543762", "C": "Viera", "G": "45595", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "45608039", "C": "Correa", "G": "45545", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "46988717", "C": "Alvez", "G": "45533", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "52261412", "C": "Piriz", "G": "44618", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "50590994", "C": "Santos", "G": "45315", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "41036664", "C": "Rodriguez", "G": "45311", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "50630120", "C": "Rodriguez", "G": "45265", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "64878493", "C": "Jofre", "G": "45293", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "42204399", "C": "Diaz", "G": "45238", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "65812919", "C": "Talmadge", "G": "45316", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "53108176", "C": "Silveira", "G": "45316", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "42106715", "C": "Silva", "G": "45313", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "32641816", "C": "Perez", "G": "45265", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "43447075", "C": "Colman", "G": "45225", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "46067173", "C": "Fagundez", "G": "45139", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "54154596", "C": "Lopez", "G": "45215", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "37143160", "C": "Moreira", "G": "45231", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "48590938", "C": "Olivera", "G": "45204", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "38636154", "C": "Alvarez", "G": "45190", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "46825163", "C": "dos Anjos", "G": "45208", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "41849803", "C": "Marin", "G": "45201", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "26685854", "C": "Cuadro", "G": "45199", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "48542505", "C": "Reyes", "G": "45197", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "44375019", "C": "Nuñez", "G": "45146", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "40847525", "C": "Fleitas", "G": "44789", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "35607140", "C": "Piriz", "G": "42413", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "39998210", "C": "Meneses", "G": "44928", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "48260472", "C": "CARBALLO", "G": "44599", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "30882303", "C": "IGLESIAS", "G": "44616", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "45575804", "C": "Rodriguez", "G": "44618", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "44753411", "C": "GUTIERREZ", "G": "44616", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "50391524", "C": "VALDEZ", "G": "44599", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "42191176", "C": "MENDEZ", "G": "44334", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "53279452", "C": "Techera", "G": "44268", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "49025803", "C": "Rodriguez", "G": "44257", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "42411394", "C": "Coitinho", "G": "43858", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "42829789", "C": "Olivera", "G": "44139", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "44847604", "C": "Dominguez", "G": "44505", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "52261393", "C": "Piriz", "G": "44091", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "44847604", "C": "Dominguez", "G": "44505", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "52261393", "C": "Piriz", "G": "44091", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "44886646", "C": "Santana", "G": "43959", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "35120994", "C": "Da Silva", "G": "43962", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "46101565", "C": "Chineppe", "G": "43965", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "28620024", "C": "Soria", "G": "41446", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "35705956", "C": "Dos Santos", "G": "42222", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "45760623", "C": "Alvez", "G": "43530", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "50028086", "C": "Sosa", "G": "43497", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "47505560", "C": "López", "G": "43469", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "17736052", "C": "SZYMKOW", "G": "43437", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "31138785", "C": "Azambuya", "G": "42731", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "46014411", "C": "Larronda", "G": "43434", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "49794224", "C": "Lanzzeri", "G": "43392", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "47540794", "C": "Rodriguez", "G": "42559", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "48601921", "C": "Leites", "G": "43168", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "43665685", "C": "Da Silva", "G": "43110", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "47550628", "C": "Blanco", "G": "43111", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "40978780", "C": "Castro", "G": "43040", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "43097743", "C": "Alvarez", "G": "42963", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "30123311", "C": "Alvez", "G": "42948", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "48675649", "C": "Perez", "G": "42935", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "29589538", "C": "Ferrao", "G": "42893", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "31895224", "C": "Ferreira", "G": "42867", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "48118609", "C": "Nicola", "G": "42732", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "38008850", "C": "Leite", "G": "42678", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "32776641", "C": "Rodriguez", "G": "42187", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "46711128", "C": "Lapeire", "G": "42226", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "44076067", "C": "Vallejo", "G": "42215", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "48683064", "C": "Mora", "G": "42114", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "35806015", "C": "da Rosa", "G": "42089", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "47598387", "C": "Silva", "G": "42058", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "43217486", "C": "Garcia", "G": "41873", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "27116284", "C": "Camargo", "G": "41754", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "33624233", "C": "BARRETO", "G": "41730", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "37415121", "C": "Lagos", "G": "41431", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "31294745", "C": "Dos Santos", "G": "41306", "H": "ACTIVO" }, { "A": "ASDELY S.A.", "B": "30282339", "C": "Menese", "G": "40907", "H": "ACTIVO" },
-     { "A": "BOCH VANDERLEI ANTONIO", "B": "153026475", "C": "PEREIRA", "G": "46086", "H": "ACTIVO" }, { "A": "BOCH VANDERLEI ANTONIO", "B": "583643905", "C": "RAPANHA", "G": "46086", "H": "ACTIVO" }, { "A": "BOCH VANDERLEI ANTONIO", "B": "403513406", "C": "DIONIZIO", "G": "46069", "H": "ACTIVO" }, { "A": "BOCH VANDERLEI ANTONIO", "B": "332940731", "C": "GONCALVEZ", "G": "46071", "H": "ACTIVO" },
-     { "A": "Claudio Nicolas Vandes Vargas y Cristofer Hugo Duarte Bica", "B": "51904271", "C": "RIVERO", "G": "46120", "H": "ACTIVO" }, { "A": "Claudio Nicolas Vandes Vargas y Cristofer Hugo Duarte Bica", "B": "50659536", "C": "CARDOZO", "G": "46100", "H": "ACTIVO" }, { "A": "Claudio Nicolas Vandes Vargas y Cristofer Hugo Duarte Bica", "B": "50551695", "C": "SILVA", "G": "46035", "H": "ACTIVO" }, { "A": "Claudio Nicolas Vandes Vargas y Cristofer Hugo Duarte Bica", "B": "44157114", "C": "Souza", "G": "45574", "H": "ACTIVO" }, { "A": "Claudio Nicolas Vandes Vargas y Cristofer Hugo Duarte Bica", "B": "47421524", "C": "Mederos", "G": "45518", "H": "ACTIVO" }, { "A": "Claudio Nicolas Vandes Vargas y Cristofer Hugo Duarte Bica", "B": "49294337", "C": "Oliva", "G": "45150", "H": "ACTIVO" }, { "A": "Claudio Nicolas Vandes Vargas y Cristofer Hugo Duarte Bica", "B": "49681697", "C": "Machado", "G": "45143", "H": "ACTIVO" }, { "A": "Claudio Nicolas Vandes Vargas y Cristofer Hugo Duarte Bica", "B": "52819621", "C": "Rodriguez", "G": "45143", "H": "ACTIVO" },
-     { "A": "Dalfey S.A.", "B": "42645478", "C": "ECHUDE", "G": "42941", "H": "ACTIVO" }, { "A": "Dalfey S.A.", "B": "48898867", "C": "Santiago", "G": "44958", "H": "ACTIVO" }, { "A": "Dalfey S.A.", "B": "51922887", "C": "Lima", "G": "45952", "H": "ACTIVO" }, { "A": "Dalfey S.A.", "B": "49455612", "C": "MONTENEGRO", "G": "44950", "H": "ACTIVO" }, { "A": "Dalfey S.A.", "B": "51260382", "C": "SUAREZ", "G": "44683", "H": "ACTIVO" }, { "A": "Dalfey S.A.", "B": "53963017", "C": "ALONSO", "G": "44721", "H": "ACTIVO" }, { "A": "Dalfey S.A.", "B": "50081606", "C": "DA SILVA", "G": "45446", "H": "ACTIVO" }, { "A": "Dalfey S.A.", "B": "43689693", "C": "Albornoz", "G": "45005", "H": "ACTIVO" }, { "A": "Dalfey S.A.", "B": "51804194", "C": "PIRIZ", "G": "44953", "H": "ACTIVO" }, { "A": "Dalfey S.A.", "B": "53260005", "C": "RODRIGUEZ", "G": "45679", "H": "ACTIVO" }, { "A": "Dalfey S.A.", "B": "46749464", "C": "Bentin", "G": "45118", "H": "ACTIVO" }, { "A": "Dalfey S.A.", "B": "49726710", "C": "Silva", "G": "45853", "H": "ACTIVO" }, { "A": "Dalfey S.A.", "B": "41292626", "C": "Rocha", "G": "45957", "H": "ACTIVO" }, { "A": "Dalfey S.A.", "B": "49066699", "C": "Piriz", "G": "46058", "H": "ACTIVO" }, { "A": "Dalfey S.A.", "B": "53154006", "C": "Seleguin", "G": "45798", "H": "ACTIVO" }, { "A": "Dalfey S.A.", "B": "49501920", "C": "dos Santos", "G": "45552", "H": "ACTIVO" },
-     { "A": "Vandes Vargas Claudio Nicolás", "B": "51735985", "C": "Sampayo", "G": "45180", "H": "ACTIVO" }, { "A": "Vandes Vargas Claudio Nicolás", "B": "56069163", "C": "LOPEZ", "G": "45089", "H": "ACTIVO" }, { "A": "Vandes Vargas Claudio Nicolás", "B": "54574647", "C": "Ribero", "G": "45069", "H": "ACTIVO" }, { "A": "Vandes Vargas Claudio Nicolás", "B": "56068028", "C": "Madruga", "G": "44965", "H": "ACTIVO" }, { "A": "Vandes Vargas Claudio Nicolás", "B": "31820778", "C": "Gomez", "G": "44720", "H": "ACTIVO" }, { "A": "Vandes Vargas Claudio Nicolás", "B": "33455038", "C": "Planas", "G": "44726", "H": "ACTIVO" }, { "A": "Vandes Vargas Claudio Nicolás", "B": "41956931", "C": "RIVERA", "G": "44683", "H": "ACTIVO" }, { "A": "Vandes Vargas Claudio Nicolás", "B": "45677456", "C": "FURTADO", "G": "44599", "H": "ACTIVO" }, { "A": "Vandes Vargas Claudio Nicolás", "B": "48261006", "C": "Ferraz", "G": "44511", "H": "ACTIVO" }, { "A": "Vandes Vargas Claudio Nicolás", "B": "55260342", "C": "Pereira", "G": "44511", "H": "ACTIVO" }, { "A": "Vandes Vargas Claudio Nicolás", "B": "46366175", "C": "Ribero", "G": "44511", "H": "ACTIVO" }, { "A": "Vandes Vargas Claudio Nicolás", "B": "51296175", "C": "Pereira", "G": "44511", "H": "ACTIVO" }, { "A": "Vandes Vargas Claudio Nicolás", "B": "48997768", "C": "Olivera", "G": "44354", "H": "ACTIVO" }
+     {
+       "A": "52057152",
+       "B": "jose ignacio rocha borges",
+       "C": "dofer sas",
+       "D": "46776",
+       "E": "activo"
+     },
+     {
+       "A": "53310137",
+       "B": "cesar alejandro altesor gazo",
+       "C": "dofer sas",
+       "D": "46776",
+       "E": "activo"
+     }
     ];
 
     function limpiarString(str) {
@@ -149,23 +115,22 @@
             return;
         }
 
-        // Buscamos por la columna B (Cédula en el formato convertido)
-        const funcionario = database.find(f => limpiarString(f.B) === cedulaLimpia);
+        const funcionario = database.find(f => limpiarString(f.A) === cedulaLimpia);
 
         if (funcionario) {
             errorBox.style.display = 'none';
             badgeCard.style.display = 'block';
 
-            document.getElementById('cardNombre').innerText = funcionario.C; // Nombre/Apellido
-            document.getElementById('cardCI').innerText = funcionario.B;     // Cédula
-            document.getElementById('cardEmpresa').innerText = funcionario.A;  // Contratista
-            document.getElementById('cardVencimiento').innerText = convertirFechaExcel(funcionario.G); // Fecha Ingreso
+            document.getElementById('cardNombre').innerText = funcionario.B;
+            document.getElementById('cardCI').innerText = funcionario.A;
+            document.getElementById('cardEmpresa').innerText = funcionario.C;
+            document.getElementById('cardVencimiento').innerText = convertirFechaExcel(funcionario.D);
 
             const estadoBadge = document.getElementById('cardEstado');
-            estadoBadge.innerText = funcionario.H; // Estado
+            estadoBadge.innerText = funcionario.E;
 
-            // Lógica para pintar Activo / Inactivo basado en la columna H
-            if (funcionario.H.toLowerCase() === "activo") {
+            // Lógica ajustada para Activo / Inactivo
+            if (funcionario.E.toLowerCase() === "activo") {
                 estadoBadge.className = "status-badge status-activo";
             } else {
                 estadoBadge.className = "status-badge status-inactivo";
