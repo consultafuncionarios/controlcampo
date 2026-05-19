@@ -30,8 +30,8 @@
         .card-info { margin-bottom: 10px; font-size: 0.95rem; }
         .card-info strong { color: #555; font-size: 0.85rem; display: block; text-transform: uppercase; }
         .status-badge { display: block; text-align: center; padding: 8px; margin-top: 10px; border-radius: 6px; font-weight: bold; font-size: 1.1rem; text-transform: uppercase; }
-        .status-valido { background-color: #c8e6c9; color: #256029; }
-        .status-vencido { background-color: #ffcdd2; color: #c62828; }
+        .status-activo { background-color: #c8e6c9; color: #256029; }
+        .status-inactivo { background-color: #ffcdd2; color: #c62828; }
         
         .error-msg { display: none; color: #c62828; background: #ffcdd2; padding: 12px; border-radius: 8px; text-align: center; margin-top: 20px; font-weight: 500; }
         .footer { text-align: center; margin-top: 20px; font-size: 0.8rem; color: #777; }
@@ -58,7 +58,7 @@
             <div class="card-info"><strong>Nombre Completo</strong> <span id="cardNombre"></span></div>
             <div class="card-info"><strong>Documento (CI)</strong> <span id="cardCI"></span></div>
             <div class="card-info"><strong>Contratista / Empresa</strong> <span id="cardEmpresa"></span></div>
-            <div class="card-info"><strong>Vencimiento</strong> <span id="cardVencimiento"></span></div>
+            <div class="card-info"><strong>Fecha de ingreso</strong> <span id="cardVencimiento"></span></div>
             <div id="cardEstado" class="status-badge"></div>
         </div>
     </div>
@@ -76,14 +76,14 @@
        "B": "jose ignacio rocha borges",
        "C": "dofer sas",
        "D": "46776",
-       "E": "al dia"
+       "E": "activo"
      },
      {
        "A": "53310137",
        "B": "cesar alejandro altesor gazo",
        "C": "dofer sas",
        "D": "46776",
-       "E": "al dia"
+       "E": "activo"
      }
     ];
 
@@ -129,12 +129,13 @@
             const estadoBadge = document.getElementById('cardEstado');
             estadoBadge.innerText = funcionario.E;
 
-            if (funcionario.E.toLowerCase() === "al dia" || funcionario.E.toLowerCase() === "al día") {
-                estadoBadge.className = "status-badge status-valido";
-            } else {
-                estadoBadge.className = "status-badge status-vencido";
-            }
-        } else {
+            if (funcionario.E.toLowerCase() === "activo") {
+    estadoBadge.className = "status-badge status-activo";
+} else {
+    estadoBadge.className = "status-badge status-inactivo";
+}
+        
+        else {
             badgeCard.style.display = 'none';
             errorBox.style.display = 'block';
         }
