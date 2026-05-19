@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta de Credencial de Campo</title>
+    <style>
+        :root {
+            --primary: #2e7d32;
+            --primary-light: #e8f5e9;
+            --accent: #f9a825;
+            --text: #333;
+            --gray: #f4f4f4;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #f0f4f1; color: var(--text); padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .container { background: white; width: 100%; max-width: 450px; padding: 25px; border-radius: 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: var(--primary); margin-bottom: 20px; font-size: 1.4rem; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem; }
+        input { width: 100%; padding: 12px; border: 2px solid #ccc; border-radius: 8px; font-size: 1rem; outline: none; transition: 0.3s; }
+        input:focus { border-color: var(--primary); }
+        button { width: 100%; padding: 14px; background: var(--accent); border: none; border-radius: 8px; font-size: 1rem; font-weight: bold; cursor: pointer; transition: 0.3s; color: #222; }
+        button:hover { background: #f57f17; }
+        
+        /* Estilo del Carné Digital */
+        .card { display: none; margin-top: 25px; border: 2px solid var(--primary); border-radius: 12px; overflow: hidden; background: white; }
+        .card-header { background: var(--primary); color: white; padding: 12px; text-align: center; font-weight: bold; font-size: 0.9rem; letter-spacing: 1px; }
+        .card-body { padding: 15px; }
+        .card-info { margin-bottom: 10px; font-size: 0.95rem; }
+        .card-info strong { color: #555; font-size: 0.85rem; display: block; text-transform: uppercase; }
+        .status-badge { display: block; text-align: center; padding: 8px; margin-top: 10px; border-radius: 6px; font-weight: bold; font-size: 1.1rem; text-transform: uppercase; }
+        .status-valido { background-color: #c8e6c9; color: #256029; }
+        .status-vencido { background-color: #ffcdd2; color: #c62828; }
+        
+        .error-msg { display: none; color: #c62828; background: #ffcdd2; padding: 12px; border-radius: 8px; text-align: center; margin-top: 20px; font-weight: 500; }
+        .footer { text-align: center; margin-top: 20px; font-size: 0.8rem; color: #777; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Identificación de Campo</h2>
+    
+    <div class="form-group">
+        <label for="cedulaInput">Ingrese su Número de Cédula</label>
+        <input type="text" id="cedulaInput" placeholder="Ej: 5.205.715-2 o 52057152" autocomplete="off">
+    </div>
+    <button onclick="consultarCedula()">Consultar</button>
+
+    <!-- Mensaje de Error -->
+    <div id="errorBox" class="error-msg">Funcionario no encontrado o documentación pendiente.</div>
+
+    <!-- Carné Digital -->
+    <div id="badgeCard" class="card">
+        <div class="card-header">FUNCIONARIO AUTORIZADO</div>
+        <div class="card-body">
+            <div class="card-info"><strong>Nombre Completo</strong> <span id="cardNombre"></span></div>
+            <div class="card-info"><strong>Documento (CI)</strong> <span id="cardCI"></span></div>
+            <div class="card-info"><strong>Contratista / Empresa</strong> <span id="cardEmpresa"></span></div>
+            <div class="card-info"><strong>Vencimiento</strong> <span id="cardVencimiento"></span></div>
+            <div id="cardEstado" class="status-badge"></div>
+        </div>
+    </div>
+
+    <div class="footer">
+        V1.0 - Control de Ingreso a Campo
+    </div>
+</div>
+
+<script>
+    // BASE DE DATOS ADAPTADA A TU FORMATO REAL de Excel
+    const database = [
+     {
+       "A": "52057152",
+       "B": "jose ignacio rocha borges",
+       "C": "dofer sas",
+       "D": "46776",
+       "E": "al dia"
+     },
+     {
+       "A": "53310137",
+       "B": "cesar alejandro altesor gazo",
+       "C": "dofer sas",
+       "D": "46776",
+       "E": "al dia"
+     }
+    ];
+
+    function limpiarString(str) {
+        return str.toString().replace(/[^0-9]/g, '');
+    }
+
+    // Función para convertir el número raro de Excel a una fecha leíble
+    function convertirFechaExcel(numeroExcel) {
+        if(isNaN(numeroExcel)) return numeroExcel; // Si ya es texto, lo deja igual
+        const fecha = new Date((numeroExcel - 25569) * 86400 * 1000);
+        const dia = String(fecha.getDate()).padStart(2, '0');
+        const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+        const anio = fecha.getFullYear();
+        return `${dia}/${mes}/${anio}`;
+    }
+
+    function consultarCedula() {
+        const inputVal = document.getElementById('cedulaInput').value;
+        const cedulaLimpia = limpiarString(inputVal);
+        
+        const errorBox = document.getElementById('errorBox');
+        const badgeCard = document.getElementById('badgeCard');
+
+        if (!cedulaLimpia) {
+            alert("Por favor, ingrese un número de cédula.");
+            return;
+        }
+
+        // Buscamos usando la columna "A" que es donde está la cédula
+        const funcionario = database.find(f => limpiarString(f.A) === cedulaLimpia);
+
+        if (funcionario) {
+            errorBox.style.display = 'none';
+            badgeCard.style.display = 'block';
+
+            // Cargamos los datos usando las letras A, B, C, D, E
+            document.getElementById('cardNombre').innerText = funcionario.B;
+            document.getElementById('cardCI').innerText = funcionario.A;
+            document.getElementById('cardEmpresa').innerText = funcionario.C;
+            document.getElementById('cardVencimiento').innerText = convertirFechaExcel(funcionario.D);
+
+            const estadoBadge = document.getElementById('cardEstado');
+            estadoBadge.innerText = funcionario.E;
+
+            if (funcionario.E.toLowerCase() === "al dia" || funcionario.E.toLowerCase() === "al día") {
+                estadoBadge.className = "status-badge status-valido";
+            } else {
+                estadoBadge.className = "status-badge status-vencido";
+            }
+        } else {
+            badgeCard.style.display = 'none';
+            errorBox.style.display = 'block';
+        }
+    }
+</script>
+
+</body>
+</html>
