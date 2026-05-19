@@ -30,6 +30,8 @@
         .card-info { margin-bottom: 10px; font-size: 0.95rem; }
         .card-info strong { color: #555; font-size: 0.85rem; display: block; text-transform: uppercase; }
         .status-badge { display: block; text-align: center; padding: 8px; margin-top: 10px; border-radius: 6px; font-weight: bold; font-size: 1.1rem; text-transform: uppercase; }
+        
+        /* Nuevos estados de color para Activo / Inactivo */
         .status-activo { background-color: #c8e6c9; color: #256029; }
         .status-inactivo { background-color: #ffcdd2; color: #c62828; }
         
@@ -58,18 +60,18 @@
             <div class="card-info"><strong>Nombre Completo</strong> <span id="cardNombre"></span></div>
             <div class="card-info"><strong>Documento (CI)</strong> <span id="cardCI"></span></div>
             <div class="card-info"><strong>Contratista / Empresa</strong> <span id="cardEmpresa"></span></div>
-            <div class="card-info"><strong>Fecha de ingreso</strong> <span id="cardVencimiento"></span></div>
+            <div class="card-info"><strong>Fecha de Ingreso</strong> <span id="cardVencimiento"></span></div>
             <div id="cardEstado" class="status-badge"></div>
         </div>
     </div>
 
     <div class="footer">
-        V1.0 - Control de Ingreso a Campo
+        V1.1 - Control de Ingreso a Campo
     </div>
 </div>
 
 <script>
-    // BASE DE DATOS ADAPTADA A TU FORMATO REAL de Excel
+    // BASE DE DATOS ACTUALIZADA (Estado modificado a activo/inactivo)
     const database = [
      {
        "A": "52057152",
@@ -91,9 +93,9 @@
         return str.toString().replace(/[^0-9]/g, '');
     }
 
-    // Función para convertir el número raro de Excel a una fecha leíble
+    // Función para convertir fechas numéricas de Excel
     function convertirFechaExcel(numeroExcel) {
-        if(isNaN(numeroExcel)) return numeroExcel; // Si ya es texto, lo deja igual
+        if(isNaN(numeroExcel)) return numeroExcel; 
         const fecha = new Date((numeroExcel - 25569) * 86400 * 1000);
         const dia = String(fecha.getDate()).padStart(2, '0');
         const mes = String(fecha.getMonth() + 1).padStart(2, '0');
@@ -113,14 +115,12 @@
             return;
         }
 
-        // Buscamos usando la columna "A" que es donde está la cédula
         const funcionario = database.find(f => limpiarString(f.A) === cedulaLimpia);
 
         if (funcionario) {
             errorBox.style.display = 'none';
             badgeCard.style.display = 'block';
 
-            // Cargamos los datos usando las letras A, B, C, D, E
             document.getElementById('cardNombre').innerText = funcionario.B;
             document.getElementById('cardCI').innerText = funcionario.A;
             document.getElementById('cardEmpresa').innerText = funcionario.C;
@@ -129,13 +129,13 @@
             const estadoBadge = document.getElementById('cardEstado');
             estadoBadge.innerText = funcionario.E;
 
+            // Lógica ajustada para Activo / Inactivo
             if (funcionario.E.toLowerCase() === "activo") {
-    estadoBadge.className = "status-badge status-activo";
-} else {
-    estadoBadge.className = "status-badge status-inactivo";
-}
-        
-        else {
+                estadoBadge.className = "status-badge status-activo";
+            } else {
+                estadoBadge.className = "status-badge status-inactivo";
+            }
+        } else {
             badgeCard.style.display = 'none';
             errorBox.style.display = 'block';
         }
